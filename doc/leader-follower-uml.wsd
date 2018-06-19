@@ -2,17 +2,29 @@
 
 actor Leader
 actor Follower
-
+autonumber
 Follower->Leader:   Hello
 Leader->Follower:   tx_request
 Follower->Leader:   send_tx
 Leader->Leader:     timeout
 Leader->Follower:   recv_timeout
+Follower->Leader:   send_tx
 Leader->Follower:   recv_ok
+activate Leader
+Leader->Leader:     去重
+Leader->Leader:     验证交易
 Leader->Follower:   send_tx
+deactivate Leader
 Follower->Leader:   recv_ok
+activate Follower
+Follower->Follower: 验证交易
 Follower->Leader:   black_list
-Leader->Follower:   vote
+deactivate Follower
+
+activate Leader
+Leader->Leader:     delete_tx
+Leader->Follower:   request_vote
+deactivate Leader
 Follower->Leader:   vote_result
 
 
