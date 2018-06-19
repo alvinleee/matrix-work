@@ -1,0 +1,125 @@
+@startuml
+title 启动
+start
+:获取本地时间和配置;
+:根据配置信息，配置节点服务;
+:启动节点最小服务（P2P, 账户管理，BLOCKChain...）;
+:网络发现子流程;
+:区块同步子流程;
+:获取主节点列表,生成网络拓扑图;
+:根据网络拓扑图和本地配置信息启动相应相应服务;
+
+fork 
+    if(广播区块/主节点更新区块分叉确定时序) then(yes)
+        :根据广播主节点信息生成网络拓扑;
+    endif
+	
+    if(广播区块/主节点更新区块生效时序) then(yes)
+        :停止之前的任务;
+        fork
+            if(矿工主节点) then(yes)
+                :建立矿工主节点间的VPN连接;
+                :建立和验证主节点的VPN连接;
+                :子节点的TCP建立;
+                :启动矿工任务;
+            endif
+			
+        fork again
+            if(验证主节点) then(yes)
+                :建立验证主节点间的VPN连接;
+                :建立子节点的TCP建立;
+                :建立和矿工主节点间的VPN连接;
+                :启动验证任务;
+            endif
+			
+        fork again
+            if(一般矿工节点) then(yes)
+                :建立和父节点的TCP连接;
+                :启动一般矿工节点任务;
+            endif
+			
+        fork again
+            if(一般验证节点) then(yes)
+                :建立和父节点的TCP连接;
+                :启动一般验证节点任务;
+            endif
+			
+        fork again
+            if(普通节点) then(yes)
+                :选取一个叶子节点,建立TCP连接;
+                :随机选取两个验证主节点,建立UDP连接;
+                :启动普通节点服务;
+            endif
+        end fork
+    endif
+	  
+fork again
+    :区块链服务(区块验证及区块链操作);
+    if (普通节点) then(yes)
+        :允许发生本地交易;
+    elseif(普通矿工或普通验证者) then(yes)
+        :下级节点交易转发服务;
+    else
+        :交易验证;
+        :交易去重;
+    endif
+    :可配置P2P服务;
+    :账号管理等服务;
+
+fork again
+    if(矿工主节点) then(yes)
+    :验证节点交易数据签名验证服务;
+    :本地交易数据和验证节点交易数据去重，打包功能;
+    :本地交易数据回滚服务;
+    :POW挖矿服务;
+	endif
+
+fork again
+    if(验证主节点) then(yes)
+        :POS共识流程;
+        :区块验证流程;
+        :区块分叉鉴定流程;
+        :交易打包及验证流程;
+        :控制信息生成，发送流程;
+    endif
+
+fork again
+    if(一般矿工节点) then(yes)
+        :验证并执行算力任务流程;
+        :验证并执行辅助矿工模式流程;
+        :交易转发流程;
+    endif
+
+fork again
+    if(一般验证主节点) then(yes)
+        :验证并执行算力分配流程;
+        :执行算力验证流程;
+        :验证并执行辅助验证模式流程;
+        :执行算力输出验证流程;
+    endif
+
+fork again
+    :开启区块验证服务;
+    :开启POS投票流程;
+    :根据POS投票结果确定安全操作;
+    if(暗黑服务) then(yes)
+        :开启区块检查流程;
+        if(检查失败) then(yes)
+            :发起POS投票;
+        endif
+    endif
+
+fork again
+    if(更暗黑服务) then(yes)
+        :调用验证者处理 ;
+        :调用不公开验证代码 ;
+        if(验证正确) then（低调休息）
+            :不做任何动作 ;
+        else (全网广播)
+            :提交基金会结果，从而登记奖励 ;
+            :全网调用特殊端口广播;
+        endif
+    endif
+end fork
+stop
+@enduml

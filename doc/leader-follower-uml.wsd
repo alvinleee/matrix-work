@@ -1,0 +1,19 @@
+@startuml
+
+actor Leader
+actor Follower
+
+Follower->Leader:   Hello
+Leader->Follower:   tx_request
+Follower->Leader:   send_tx
+Leader->Leader:     timeout
+Leader->Follower:   recv_timeout
+Leader->Follower:   recv_ok
+Leader->Follower:   send_tx
+Follower->Leader:   recv_ok
+Follower->Leader:   black_list
+Leader->Follower:   vote
+Follower->Leader:   vote_result
+
+
+@enduml
