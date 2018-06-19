@@ -33,7 +33,7 @@ deactivate Follower
 loop 2 times
     Leader->Leader:     1s timeout
     Leader->Follower:   recv_timeout
-    Follower->Leader:   send_tx
+    Follower->Leader:   black_list
 end
 
 Leader->Follower:   recv_ok
