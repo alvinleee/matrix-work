@@ -6,21 +6,37 @@ autonumber
 Follower->Leader:   Hello
 Leader->Follower:   tx_request
 Follower->Leader:   send_tx
-Leader->Leader:     timeout
-Leader->Follower:   recv_timeout
-Follower->Leader:   send_tx
+loop 2 times
+    Leader->Leader:     2s timeout
+    Leader->Follower:   recv_timeout
+    Follower->Leader:   send_tx
+end
 Leader->Follower:   recv_ok
+
 activate Leader
 Leader->Leader:     去重
 Leader->Leader:     验证交易
 Leader->Follower:   send_tx
 deactivate Leader
+
+loop 2 times
+    Follower->Follower: 2s timeout
+    Follower->Leader:   recv_timeout
+    Leader->Follower:   send_tx
+end
 Follower->Leader:   recv_ok
 activate Follower
 Follower->Follower: 验证交易
 Follower->Leader:   black_list
 deactivate Follower
 
+loop 2 times
+    Leader->Leader:     1s timeout
+    Leader->Follower:   recv_timeout
+    Follower->Leader:   send_tx
+end
+
+Leader->Follower:   recv_ok
 activate Leader
 Leader->Leader:     delete_tx
 Leader->Follower:   request_vote
