@@ -1,0 +1,76 @@
+@startuml
+title 流程图
+start
+if (leader) then(yes)
+    :向follower发送tx_request消息;
+    if (msg == send_tx) then(yes)
+        :启动两秒定时器;
+        :接收交易信息;
+        if (定时器触发) then (yes)
+            :向follower发送tx_request消息;
+            :启动两秒定时器;
+        else (no)
+            :删除定时器;
+            if (len(tx) != txLen ) then (yes)
+                :向follower发送tx_request消息;
+                :启动两秒定时器;
+            else (no)
+                :去重;
+                :验证交易;
+                :向follower发送tx;
+                :启动两秒定时器;
+                if (定时器触发) then (yes)
+                    :向follower发送tx;
+                    :启动两秒定时器;
+                endif
+            endif
+        endif
+    else if (msg == recv_ok) then (yes)
+        :删除定时器;
+    else if (msg == recvTxError) then (yes)
+        :删除定时器;
+        :向follower发送tx;
+        :启动两秒定时器;
+    else if (msg == send_invalidTx) then (yes)
+        :启动一秒定时器;
+        :接收无效交易信息;
+        if (定时器触发) then (yes)
+            :向follower发送 recvInvalidTx_timeout 消息;
+            :启动一秒定时器;
+        else (no)
+            :删除定时器;
+            if (len(invalidTx) != invalidTxLen ) then (yes)
+                :向follower发送 recvInvalidTx_timeout 消息;
+                :启动一秒定时器;
+            else (no)
+                :删除交易;
+                :向follower发送 vote_request 消息;
+            endif
+        endif
+    else if (msg == vote_result) then (yes)
+        :根据收集的投票结果进行共识;
+        :向矿工发送控制信息;
+    else (no)
+        stop
+    endif
+else (no)
+    if (msg == tx_request) then (yes)
+        :向leader发送交易;
+    else if (msg == send_tx) then (yes)
+        :接收leader发来的交易信息;
+        if (len(tx) != txLen ) then (yes)
+            :向leader发送 recvTxError;
+        else (no)
+            :验证交易;
+            :向leader发送无效交易列表;
+        endif
+    else if (msg == recvInvalidTx_timeout) then (true)
+        :向leader发送无效交易列表;
+    else if (msg == vote_request) then (yes)
+        :进行投票;
+        :将投票结果发送给leader;
+    else (no)
+        stop
+    endif
+endif
+@enduml
