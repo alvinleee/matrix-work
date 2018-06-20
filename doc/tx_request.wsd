@@ -1,0 +1,24 @@
+@startuml
+title 发送交易请求
+start
+:获取当前follower的信息;
+:构造请求发送交易的消息;
+:向follower发送消息;
+if (消息发送失败) then (yes)
+    :返回错误;
+endif
+:设置定时器;
+:从follower接收交易数据;
+if (len(tx)!=tx_len || 定时器触发) then (yes)
+    if (count > 允许重传的次数) then (yes)
+        :返回failed;
+    endif
+    :构造请求发送交易的消息;
+    :设置定时器;
+endif
+:删除定时器;
+:验证交易;
+:交易去重;
+:向follower发送交易块;
+end
+@enduml

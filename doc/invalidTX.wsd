@@ -1,0 +1,14 @@
+@startuml
+title 接收无效交易
+start
+:接收follower发来的无效交易;
+if(验证收到的信息是否完整) then (否)
+    :返回错误;
+endif
+:根据收到的信息从交易块中删除无效交易;
+:向follower发送投票请求消息;
+if (消息发送失败) then (yes)
+    :返回错误;
+endif
+end
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+title  向follower发送交易块
+start
+:获取去重后的交易块;
+:将交易块发送给follower;
+if (消息发送失败) then (yes)
+    :返回错误;
+endif
+:启动定时器;
+if (收到follower发来的recv_ok消息)then (yes)
+    :删除定时器;
+else (no)
+    if(定时器触发) then (yes)
+        if (count > 允许重传的次数) then (yes)
+            :返回failed;
+        endif
+        :重新将交易块发送给follower;
+        :设置定时器;
+    endif
+endif
+end
+@enduml

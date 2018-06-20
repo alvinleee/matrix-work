@@ -1,0 +1,11 @@
+@startuml
+title 接收投票结果
+start
+    :接收follower发来的投票结果;
+    if(验证收到的信息是否完整) then (否)
+        :返回错误;
+    endif
+    :根据共识算法确定投票结果;
+    :向矿工网络发送控制消息;
+end
+@enduml
