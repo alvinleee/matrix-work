@@ -1,0 +1,23 @@
+@startuml
+title follower
+
+start
+:接收从leader发来的消息;
+fork
+    :收到leader发来的 请求交易消息;
+    :向leader发送交易;
+fork again
+    :接收leader发来的交易信息;
+    :向leader发送 recv_ok 消息;
+    :打包交易验证;
+    :向leader发送无效交易列表;
+
+fork again
+    :收到leader发来的请求投票消息;
+    :分叉鉴定;
+    :区块合法性鉴定;
+    :进行投票;
+    :将投票结果发送给leader;
+end fork
+end
+@enduml

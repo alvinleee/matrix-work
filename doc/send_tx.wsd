@@ -16,6 +16,7 @@ else (no)
         endif
         :重新将交易块发送给follower;
         :设置定时器;
+        :重传计数加一;
     endif
 endif
 end
