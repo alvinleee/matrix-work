@@ -1,0 +1,31 @@
+@startuml
+start
+while(follow < 10)
+    :leader向follower发送交易请求;
+    note right
+        实际上应该开10个gorutine进行并发操作
+    end note
+endwhile
+
+:leader验证所有follower发来的交易;
+:leader对所有交易进行去重;
+
+while(follow < 10)
+    :leader向follower发送打包的交易数据;
+endwhile
+
+while(follow < 10)
+    :leader接收follower发来的无效交易列表;
+endwhile
+
+:leader删除无效交易;
+
+while(follow < 10)
+    :leader向follower发送投票请求;
+    :leader接收follower的投票结果;
+endwhile
+
+:leader收集所有follower的投票结果进行共识;
+:leader将共识结果发送给矿工节点;
+end
+@enduml
