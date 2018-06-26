@@ -18,8 +18,7 @@ if (len(tx)!=tx_len || 定时器触发) then (yes)
     :重传计数加一;
 endif
 :删除定时器;
-:验证交易;
-:交易去重;
+:把交易加入交易池;
 :向follower发送交易块;
 end
 @enduml
