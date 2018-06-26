@@ -1,0 +1,7 @@
+@startuml
+start
+:构造请求投票消息;
+:调用接口将消息发给follower;
+:等待接收follower返回的投票结果;
+end
+@enduml

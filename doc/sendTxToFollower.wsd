@@ -1,0 +1,25 @@
+@startuml
+
+start
+:调用发送接口将打包好的交易发送给follower;
+:启动定时器;
+:接收从follower发来的消息;
+while (true)
+    if (定时器触发) then (true)
+        if (重传计数 > 1) then (true)
+            :返回发送错误;
+            end
+        else (false)
+            :调用发送接口将打包好的交易发送给follower;
+            :重设定时器;
+            :重传计数加一;
+        endif
+    else (false)
+        :删除定时器;
+        :break,跳出循环;
+    endif
+endwhile
+    :接收follower发来的无效交易;
+    :在打包的交易区块中删除无效的交易;
+end
+@enduml

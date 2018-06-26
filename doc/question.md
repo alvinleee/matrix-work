@@ -6,4 +6,4 @@
 
 - 区块结构中交易存的是一个交易指针的切片，那把区块加入区块链时，如何获取交易内容？
 
-- 
+- pandoc --template=pm-template.latex --pdf-engine=xelatex question.md -o question.pdf
