@@ -5,6 +5,8 @@ start
 :计算有效投票的押金总额;
 if (有效投票 >= 6 && 押金总额 >= 75%)then(yes)
     :交易生效;
+else(no)
+    :暂时不考虑这种情况,返回错误;
 endif
 end
 @enduml
