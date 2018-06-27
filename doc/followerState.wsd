@@ -8,7 +8,6 @@ fork
     :向leader发送交易;
 fork again
     :接收leader发来的交易信息;
-    :向leader发送 recv_ok 消息;
     :打包交易验证;
     :向leader发送无效交易列表;
 

@@ -6,6 +6,7 @@ start
 :设置2s定时器;
 while (1)
 if (定时器没有超时) then (true)
+    :接收follower发来的交易;
     :删除定时器;
     if(签名验证正确)then (yes)
         break
@@ -21,9 +22,9 @@ if (定时器没有超时) then (true)
     endif
 else (false)
     if( 重传计数 < 1) then (true)
-    :调用接口发送消息;
-    :重设定时器;
-    :重传计数加一;
+        :调用接口发送消息;
+        :重设定时器;
+        :重传计数加一;
     else
         :返回接收follower的交易错误;
         end

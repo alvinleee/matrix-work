@@ -3,7 +3,7 @@ title 将打包好的交易列表发送给follower
 start
 :调用发送接口将打包好的交易发送给follower;
 :启动定时器;
-:接收从follower发来的消息;
+:接收follower发来的无效交易;
 while (true)
     if (定时器没有触发) then (true)
     if(签名验证正确)then (yes)
@@ -30,7 +30,6 @@ while (true)
         endif
     endif
 endwhile
-    :接收follower发来的无效交易;
     :在打包的交易列表中删除无效的交易;
 end
 @enduml
