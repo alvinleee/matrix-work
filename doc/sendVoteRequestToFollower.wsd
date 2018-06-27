@@ -1,7 +1,17 @@
 @startuml
+title 向follower发送投票请求并收集投票结果
 start
-:构造请求投票消息;
+:构造请求投票消息,即删除无效交易后的交易列表,并对其进行签名,并对其进行签名;
 :调用接口将消息发给follower;
 :等待接收follower返回的投票结果;
+:设置定时器;
+while(定时器没有超时)
+    if(对收到的投票结果验签)then(yes)
+        :将投票结果保存到列表中;
+    else (no)
+        :废弃;
+    endif
+endwhile
+:定时器超时，完成投票结果的收集过程;
 end
 @enduml

@@ -1,0 +1,10 @@
+@startuml
+title 对投票结果进行共识
+start
+:对投票结果进行验签;
+:计算有效投票的押金总额;
+if (有效投票 >= 6 && 押金总额 >= 75%)then(yes)
+    :交易生效;
+endif
+end
+@enduml
