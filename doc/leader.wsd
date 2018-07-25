@@ -13,16 +13,12 @@ endwhile
 while(follow < 10)
     :leader向follower发送打包好的交易列表;
 endwhile
-
-while(follow < 10)
-    :leader接收follower发来的无效交易列表;
-endwhile
-
 while(follow < 10)
     :leader向follower发送投票请求;
 endwhile
-
-:leader收集所有follower的投票结果;
+:leader对打包的交易进行投票;
+:分叉鉴定;
+:对区块进行验证;
 :leader对收集的投票结果进行共识;
 :leader将共识结果发送给矿工节点;
 end

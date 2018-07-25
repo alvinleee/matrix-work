@@ -1,0 +1,11 @@
+@startuml
+start
+while(遍历交易列表)
+:逐一验证打包交易中的每一条交易;
+if (交易无效)then (yes)
+    :删除交易列表中的相应条目;
+endif
+endwhile
+:对遍历过后的交易列表进行签名;
+end
+@enduml
