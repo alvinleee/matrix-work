@@ -1,0 +1,39 @@
+@startuml
+title 启动挖矿流程图
+(*)-->"hash服务"
+ --> "ethernum.StartMining"
+ --> "miner.Start"
+"miner.Start" --> "worker.commitNewWork"
+note left 
+    把header和
+    难度列表放
+    入 到work
+    结构体中传
+    给agent
+end note
+--> "worker.push"
+-->"等待从self.workCh通道传来的work"
+"miner.Start" --> "worker.Start"
+--> "agent.Start"
+--> "CpuAgent.Start"
+--> "CpuAgent.update"
+--> "等待从self.workCh通道传来的work"
+--> "CpuAgent.mine"
+"CpuAgent.mine" --> [调用共识引擎的seal方法]"engine.seal"
+--> "ethash.seal"
+--> "ethash.mine"
+--> "hashimotoFull"
+if "result <= target" then
+    --> [true] "发送found消息"
+    --> [true,将挖矿结果放入found通道中]"ethash.seal"
+    --> [seal方法返回,退出挖矿线程]"CpuAgent.mine"
+else
+    if "result是否小于难度列表中的某个难度值" then
+        --> [true] "从难度列表中删除当前难度值和\n比当前难度值更小的难度值"
+        --> "发送found消息"
+        --> [继续挖矿]"hashimotoFull"
+    else
+        --> [false,继续挖矿]"hashimotoFull"
+    endif
+endif
+@enduml
