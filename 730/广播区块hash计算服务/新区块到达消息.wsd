@@ -1,0 +1,14 @@
+@startuml
+title 新区块消息处理流程
+(*)-->收到新区块消息
+if "判断消息中的\n数据是否合法" then
+    --> [不合法]退出
+else
+    [合法]if "判断消息中的\n块高>=当前高度" then
+        -->[true] 停止挖矿任务
+        --> 退出
+    else
+        -->[false]退出
+    endif
+endif
+@enduml

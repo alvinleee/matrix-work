@@ -1,0 +1,31 @@
+@startuml
+(*) --> 接收订阅消息
+--> 收到blockchain插入消息
+if 消息合法 then
+    [true]if 新区块是广播区块 then
+        -->[true] 从ca接口获取顶层节点列表
+        --> 通过header中的列表获取当前节点的身份
+            if 当前节点是验证者\n或者是备选验证者 then
+                --> [true] 更新除自己之外的顶点在线状态缓存
+                if 订阅状态为未订阅 then
+                    --> [true]订阅顶层节点上下线状态
+                    --> 接收订阅消息
+                else
+                    --> [false]接收订阅消息
+                endif
+            else
+                --> [false] 清空缓存的顶点在线状态
+                if 订阅状态为已订阅 then
+                    --> [true]取消订阅顶层节点上下线消息
+                    --> 退出
+                else
+                    --> [false] 退出
+                endif
+            endif
+        else
+        --> [false]接收订阅消息
+    endif
+else
+--> [false]接收订阅消息
+endif
+@enduml

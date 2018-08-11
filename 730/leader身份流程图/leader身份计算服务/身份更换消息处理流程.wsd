@@ -1,0 +1,24 @@
+@startuml
+(*) --> 收到身份变更消息
+if 身份信息合法 then
+    [true]if 判断是否是验证者消息 then
+        [是验证者消息]if 当前节点不是验证者 then
+            -->[true]把当前节点的角色信息变更为验证者
+            --> 启动leader身份计算协程
+            --> 退出
+        else
+            --> [false]退出
+        endif
+    else
+        [不是验证者消息] if 当前节点是验证者 then
+            -->[true] "把当前节点的角色\n信息变更为新角色"
+            --> 关闭leader身份计算协程
+            --> 退出
+        else
+            --> [false]退出
+        endif
+    endif
+else
+    --> [false]退出
+endif
+@enduml

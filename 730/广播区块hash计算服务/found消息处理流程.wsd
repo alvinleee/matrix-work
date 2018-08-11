@@ -1,0 +1,15 @@
+@startuml
+title found消息处理流程
+(*)-->收到found消息
+if "判断消息中的\n数据是否合法" then
+    --> [不合法]退出
+else
+    [合法]if "判断found消息\n中的难度值" then
+        -->[等于header\n中的难度值 ] 停止挖矿任务
+        --> 发送header到本地挖矿结果验证服务
+    else
+        --> [不等于header\n中的难度值]发送header到本地挖矿结果验证服务
+    endif
+endif
+--> 退出
+@enduml

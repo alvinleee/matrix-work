@@ -1,0 +1,24 @@
+@startuml
+(*) --> 收到共识请求
+if 请求中的leader=缓存的leader\n请求中的seq==缓存的seq then
+    --> 清空共识请求缓存
+    --> 遍历共识请求中每一个请求
+    --> 生成req的hash
+    --> 以hash为key将req缓存到共识请求map中
+    --> 调用p2p接口查询req中节点的在线状态
+    if 查询的状态==请求中的状态 then
+        --> 投赞成票
+    else
+        --> 投反对票
+    endif
+    --> 将投票结果和请求的hash加入到共识投票集
+    if 遍历完成 then
+        --> [true]广播共识投票消息
+        --> 退出
+    else
+        --> [false]遍历共识请求中每一个请求
+    endif
+else
+--> 退出
+endif
+@enduml

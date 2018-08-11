@@ -1,0 +1,23 @@
+@startuml
+(*) --> 收到请求消息
+if 恶意不投票 then
+    --> [true] 退出
+else
+    --> [false] if 延迟投票 then
+        --> [true] sleep 10s
+        --> 获取请求发起方的id
+    else
+        --> [false] 获取请求发起方的id
+    endif
+    --> if 请求发起方是leader then
+        --> [true] 投赞成票
+        --> 构造投票结果
+    else
+        --> [false] 投反对票
+    endif
+    --> 构造投票结果
+    --> 对投票结果进行签名
+    --> 将投票结果发送给ca
+    --> 退出
+endif
+@enduml

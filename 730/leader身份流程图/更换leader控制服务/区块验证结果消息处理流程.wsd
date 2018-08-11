@@ -1,0 +1,19 @@
+@startuml
+(*) --> 收到消息
+if 入参合法 then
+   [true] if 当前状态是否为\n等待区块结果状态 then
+        --> [true] 获取当前leaderId
+        if "fromId == leaderId &&\n 当前轮次==当前块高" then
+            -->[true] 停止当前定时器
+            --> 把当前状态设为idle
+            --> 退出
+        else
+            -->[false] 退出
+        endif
+    else
+        -->[false] 退出
+    endif
+else
+--> [false]退出
+endif
+@enduml

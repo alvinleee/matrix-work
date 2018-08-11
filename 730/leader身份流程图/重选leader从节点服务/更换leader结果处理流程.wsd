@@ -1,0 +1,15 @@
+@startuml
+(*) --> 收到发出更换leader结果消息的节点id
+if 发出id != 结果id then
+    -->退出
+else
+    -->调用dpos共识引擎接口判断结果
+    if 结果为真 then
+        --> [false] 退出
+    else 
+        --> [true] 发送更换leader结果成功消息
+        --> 发送退出消息
+        --> 退出
+    endif
+endif
+@enduml

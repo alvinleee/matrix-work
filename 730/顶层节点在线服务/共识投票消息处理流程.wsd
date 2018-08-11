@@ -1,0 +1,34 @@
+@startuml
+(*)-->收到共识投票
+--> 遍历共识投票中每一个投票
+if 遍历完成 then
+    -->[true] 退出
+else
+--> [false]调用共识票池的添加投票接口
+note left
+   入参: hash，sign
+end note
+--> 调用共识票池的获取投票列表接口
+note left
+   输入:hash;输出:[]sign
+end note
+--> 调用共识引擎判断共识结果
+if 结果==通过 then
+    --> [true]"通过投票中的hash在共识请求\n缓存中寻找对应的请求"
+    if 找到了对应的请求 then
+        --> [true]发送共识结果消息
+        note left
+            "请求结构和签名列表"
+        end note
+        --> "根据请求中的状态更新该\n节点的共识在线状态缓存"
+        --> 调用共识票池的删除投票接口
+        note left 
+            入参:请求结构的hash
+        end note
+        -->遍历共识投票中每一个投票
+    else
+        -->[false] 遍历共识投票中每一个投票
+    endif
+endif
+endif
+@enduml

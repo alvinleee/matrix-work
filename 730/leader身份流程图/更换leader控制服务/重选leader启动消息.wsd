@@ -1,0 +1,20 @@
+@startuml
+(*) --> 获取当前leader
+if 当前状态!= 重选leader then
+    --> [true] 退出
+else
+    --> [false] 向主节点发送停止消息
+    --> 向从节点发送停止消息
+    if 当前为leader then
+        --> [true]向主节点发送启动消息
+        --> 退出
+    else
+        if 当前为follower then
+            --> [true]向从节点发送启动消息
+            --> 退出
+        else
+            -->[false] 退出
+        endif
+    endif
+endif
+@enduml

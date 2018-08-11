@@ -1,0 +1,14 @@
+@startuml
+(*) --> 收到共识结果消息
+--> 调用共识引擎判断结果消息的正确性
+if 共识结果正确 then
+    --> [true]更新该节点的共识在线状态缓存
+    --> 调用共识票池的删除投票接口
+    note left 
+    入参:请求结构的hash
+    end note
+    --> 退出
+else
+    --> [false]退出
+endif
+@enduml

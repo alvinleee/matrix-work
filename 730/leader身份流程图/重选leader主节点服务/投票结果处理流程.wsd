@@ -1,0 +1,25 @@
+@startuml
+(*) --> 收到投票结果
+if 投票结果是否为空 then
+--> [true] 退出
+else
+    [false] if 判断是否\n对本次投票 then
+        -->[true] 验证投票结果的签名
+        if 投票方是否已经投过票 then
+            --> [true] 退出
+        else
+            --> [false] 将投票结果放入票池
+            --> 调用dpos共识接口检查票池
+            if 判断共识结果 then
+                --> [true] "向ca发送更换\nleader结果消息"
+                --> "向重选leader控制服务发送\n重选leader成功消息"
+                --> 退出
+            else
+                -->[false] 退出
+            endif
+        endif
+    else
+        -->[false] 退出
+    endif
+endif
+@enduml

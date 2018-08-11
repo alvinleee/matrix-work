@@ -1,0 +1,25 @@
+@startuml
+(*)--> 获取消息中的块高n和leaderId
+if 当前轮次 < n+1 then
+    --> [true] if 判断 n+1 是否为广播轮次 then
+        --> [true] 新leader为广播节点
+        --> "当前轮次=n+1"
+    else
+        --> [false] "通过leader轮换引擎\n接口获取新leader"
+        --> "当前轮次=n+1"
+    endif
+    --> 获取验证者数量
+    if 验证者数量是否为1 then
+        --> [true] 发送更换leader消息
+    else
+        [false]if 选出的新leader\n不是当前leader then
+            --> [true] 发送更换leader消息
+            --> 退出
+        else
+            --> [false] 退出
+        endif
+    endif
+else
+    --> [false] 退出
+endif
+@enduml

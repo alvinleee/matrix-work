@@ -1,0 +1,13 @@
+@startuml
+(*) --> 收到顶层节点上下线消息
+if 判断消息内容是否合法 then
+    if 消息中的节点\n在本地的缓存中 then
+        -->[true] "更新本地缓存中\n相应节点的在线状态"
+    --> 退出
+    else
+    --> [false]退出
+    endif
+else
+    --> [false] 退出
+endif
+@enduml

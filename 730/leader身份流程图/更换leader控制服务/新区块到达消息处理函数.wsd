@@ -1,0 +1,15 @@
+@startuml
+(*) --> 收到消息
+if "当前轮次>=当前块高+1" then
+    -->[true]退出
+else
+    --> [false]进行初始化
+    if 当前块高为广播轮次 then
+        -->[true] 设置当前状态为等待区块验证状态
+        --> 启动1.5s定时器
+        --> 退出
+    else
+        --> [false] 退出
+    endif
+endif
+@enduml
