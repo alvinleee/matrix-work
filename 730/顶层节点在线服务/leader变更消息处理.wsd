@@ -1,50 +1,84 @@
 @startuml
 (*)--> 收到leader变更消息
 --> 计算共识轮次
-if 新的共识轮次>\n缓存的共识轮次\n消息中的leader\n地址不为空 then
-    --> 更新缓存的leader地址
+if "" then
+    note right
+        新的共识轮次>
+        缓存的共识轮次
+        并且消息中的leader
+        地址不为空
+    end note
+    --> [true]更新缓存的leader地址
     --> 更新缓存的共识轮次
     if 当前验证者为leader then
-        --> [true] 从p2p接口获取顶层节点在线状态
-        --> 遍历共识在线状态缓存
-        if 遍历未完成 then
-            if "共识状态缓存中的\n节点在顶层节点在线状态中" then
-            '从顶层节点中删除经过共识的掉线的节点
-                if "缓存中的状态为掉线&&\n顶层在线状态中为掉线" then
-                    --> [true] 把该节点加入到共识请求中
-                    --> 遍历共识在线状态缓存
-                else 
-                    if "缓存中的状态为在线&&\n顶层在线状态中为掉线" then
-                        --> [true] 把该节点加入到共识请求中
+        -down-> [true] 从p2p接口获取顶层节点在线状态
+        --> 遍历顶层节点在线状态
+        if "" then
+        note left
+            遍历未完成 
+        end note
+        [true]if "" then
+        note left
+            顶层节点在
+            线状态中的
+            节点在共识
+            状态缓存中
+        end note
+            [true]if "" then
+            note left
+                顶层节点在线
+                状态中为掉线
+            end note
+                --> [true] 把该节点加入到共识请求中
+                --> 遍历顶层节点在线状态
+            else 
+                --> [false]遍历顶层节点在线状态
+            endif
+        endif
+        else
+            -->[false]遍历共识在线状态缓存
+        endif
+
+        if "" then
+            note right 
+                遍历未完成 
+            end note
+        [true]if "" then
+                note right 
+                    共识状态
+                    为上线 
+                end note
+                -->[true]遍历共识在线状态缓存
+            else
+                [false]if "" then
+                note left
+                    该节点不在
+                    顶层节点在
+                    线状态中 
+                end note
+                    -->[true]调用ca接口获取当前节点的原始身份
+                    if 原始身份!=矿工或验证者 then
+                        -->[true] 从共识在线缓存中删除该节点
                         --> 遍历共识在线状态缓存
                     else
-                        -->[false] 遍历共识在线状态缓存
-                    endif
-                endif
-            else
-                '节点不在顶层节点在线状态中
-                if 节点状态为掉线 then
-                    --> 调用ca接口获取当前节点的原始身份
-                    if 原始身份!=矿工或验证者 then
-                        --> 从共识在线缓存中删除该节点
-                    else
-                        --> 获取该节点的在线状态
-                        if 在线状态==上线 then
-                            --> 把该节点加入到共识请求中
+                        -->[false] 获取该节点的在线状态
+                        if 当前在线状态==上线 then
+                            --> [true]把节点加入到共识请求中
                         endif
                         --> 遍历共识在线状态缓存
                     endif
-                else
-                    --> 遍历共识在线状态缓存
                 endif
             endif
+        else
+           [false] if 共识请求长度>0 then
+            --> [true]广播发送共识请求
+            endif
         endif
-        --> 广播发送共识请求
         --> 退出
     else
         --> [false]退出
     endif
 else
---> [false]退出
+-left-> [false]退出
 endif
 @enduml
