@@ -1,0 +1,36 @@
+@startuml
+title leader身份服务时序图
+autonumber
+
+ca -> "leader 身份服务" as s1 : 角色变更消息
+s1 -> "控制服务" as s2 : 启动控制服务
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+区块验证 -> s1 : 区块验证请求
+s1 -> "控制服务" as s2 : 启动控制服务
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+区块验证 -> s1 : 区块验证结果
+s1 -> "控制服务" as s2 : 启动控制服务
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+区块生成 -> s2 : header生成消息
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+区块验证 -> s2 : 区块验证请求
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+区块验证 -> s2 : 区块验证结果
+s2 -> "计算服务" as s3 : 计算新leader
+s3 -> "外部服务" : leader更换通知
+s2 -> s2 : 超时消息
+s2 -> "主节点" as s4 : 开始重选消息
+s4 -> "从节点" as s5 : 投票请求
+s5 -> s4 : 投票消息
+s4 -> s5 : 投票结果
+s4 -> s2 : 重选成功消息
+s5 -> s2 : 重选成功消息
+s2 -> s3 
+s3 -> 外部服务: leader更换通知
+
+@enduml
